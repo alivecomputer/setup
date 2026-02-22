@@ -87,7 +87,17 @@ fn create_symlink(target: String, link: String) -> Result<bool, String> {
     if Path::new(&link).exists() {
         Ok(false) // already exists
     } else {
-        std::os::unix::fs::symlink(&target, &link).map_err(|e| e.to_string())?;
+        #[cfg(unix)]
+        {
+            std::os::unix::fs::symlink(&target, &link).map_err(|e| e.to_string())?;
+        }
+        #[cfg(windows)]
+        {
+            // On Windows, try directory junction first, fall back to copy
+            std::os::windows::fs::symlink_dir(&target, &link)
+                .or_else(|_| std::os::windows::fs::symlink_file(&target, &link))
+                .map_err(|e| e.to_string())?;
+        }
         Ok(true)
     }
 }
