@@ -1,9 +1,8 @@
-name: Build & Release
+name: Build
 
 on:
   push:
     branches: [main]
-    tags: ['v*']
   pull_request:
     branches: [main]
 
@@ -40,12 +39,6 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
-      - name: Install dependencies (Ubuntu)
-        if: matrix.platform == 'ubuntu-latest'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-
       - name: Install npm dependencies
         run: npm install
 
@@ -54,11 +47,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ github.ref_name }}
-          releaseName: 'Walnut Setup ${{ github.ref_name }}'
-          releaseBody: 'Download the installer for your platform.'
-          releaseDraft: false
-          prerelease: true
           args: --target ${{ matrix.target }}
 
       - name: Upload artifacts
