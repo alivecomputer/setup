@@ -24,7 +24,7 @@ body {
   background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
-  overflow: hidden;
+  overflow-y: auto;
   user-select: none;
 }
 
@@ -197,6 +197,10 @@ body {
   margin-top: auto;
   display: flex;
   gap: 12px;
+  position: sticky;
+  bottom: 0;
+  padding: 16px 0;
+  background: var(--bg);
 }
 
 .btn {
