@@ -8,13 +8,27 @@ interface Props {
   onBack: () => void;
 }
 
+const RELATIONSHIPS = [
+  "Partner",
+  "Family",
+  "Friend",
+  "Cofounder",
+  "Colleague",
+  "Mentor",
+  "Client",
+  "Other",
+];
+
 export default function People({ people, onChange, onNext, onBack }: Props) {
   const [name, setName] = useState("");
   const [rel, setRel] = useState("");
 
   const add = () => {
     if (name.trim()) {
-      onChange([...people, { name: name.trim(), relationship: rel.trim() || "important" }]);
+      onChange([
+        ...people,
+        { name: name.trim(), relationship: rel || "Other" },
+      ]);
       setName("");
       setRel("");
     }
@@ -24,8 +38,8 @@ export default function People({ people, onChange, onNext, onBack }: Props) {
     <>
       <div className="step-title">Who matters?</div>
       <div className="step-description">
-        Partner, parents, collaborators, clients — the people your squirrel
-        should know about. Each one gets their own walnut.
+        Partner, family, collaborators, clients — the people your squirrel
+        should know about. Each one gets their own walnut in your World.
       </div>
 
       <div className="input-group">
@@ -33,13 +47,16 @@ export default function People({ people, onChange, onNext, onBack }: Props) {
         <input
           className="input-field"
           type="text"
-          placeholder="Name"
+          placeholder="Ravi Patel"
           value={name}
           onChange={(e) => setName(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && name.trim()) {
-              if (rel.trim()) add();
-              else (document.querySelector("#rel-input") as HTMLElement)?.focus();
+              if (rel) add();
+              else
+                (
+                  document.querySelector("#rel-select") as HTMLElement
+                )?.focus();
             }
           }}
           autoFocus
@@ -49,15 +66,20 @@ export default function People({ people, onChange, onNext, onBack }: Props) {
       <div className="input-group">
         <div className="input-label">Relationship</div>
         <div style={{ display: "flex", gap: 8 }}>
-          <input
-            id="rel-input"
+          <select
+            id="rel-select"
             className="input-field"
-            type="text"
-            placeholder="partner, dad, advisor, client..."
             value={rel}
             onChange={(e) => setRel(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && add()}
-          />
+            style={{ flex: 1 }}
+          >
+            <option value="">Pick one...</option>
+            {RELATIONSHIPS.map((r) => (
+              <option key={r} value={r}>
+                {r}
+              </option>
+            ))}
+          </select>
           <button
             className="btn btn-secondary"
             onClick={add}
@@ -87,7 +109,9 @@ export default function People({ people, onChange, onNext, onBack }: Props) {
       )}
 
       <div className="actions">
-        <button className="btn btn-secondary" onClick={onBack}>Back</button>
+        <button className="btn btn-secondary" onClick={onBack}>
+          Back
+        </button>
         <button className="btn btn-primary" onClick={onNext}>
           {people.length > 0 ? "Next" : "Skip"}
         </button>

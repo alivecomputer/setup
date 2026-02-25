@@ -1,29 +1,29 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import Welcome from "./steps/Welcome";
+import WhatsAWorld from "./steps/WhatsAWorld";
 import Identity from "./steps/Identity";
-import WhatYouDo from "./steps/WhatYouDo";
-import Projects from "./steps/Projects";
+import YourWork from "./steps/YourWork";
+import WhatsUp from "./steps/WhatsUp";
 import People from "./steps/People";
 import Life from "./steps/Life";
-import ClaudePlan from "./steps/ClaudePlan";
-import Theme from "./steps/Theme";
-import Location from "./steps/Location";
-import Installing from "./steps/Installing";
-import Complete from "./steps/Complete";
+import Sources from "./steps/Sources";
+import Preferences from "./steps/Preferences";
+import Building from "./steps/Building";
+import Handoff from "./steps/Handoff";
 
 export type Step =
   | "welcome"
+  | "whatsaworld"
   | "identity"
-  | "whatyoudo"
-  | "projects"
+  | "yourwork"
+  | "whatsup"
   | "people"
   | "life"
-  | "claudeplan"
-  | "theme"
-  | "location"
-  | "installing"
-  | "complete";
+  | "sources"
+  | "preferences"
+  | "building"
+  | "handoff";
 
 export interface Person {
   name: string;
@@ -40,16 +40,16 @@ export interface Project {
 
 export interface InstallState {
   name: string;
-  mode: "builder" | "engineer" | "both";
+  roles: string[];
   projects: Project[];
+  focusProject: string;
+  focusTask: string;
   people: Person[];
+  lifeAreas: string[];
   lifeGoals: string;
-  tools: string[];
-  claudePlan: "light" | "daily" | "unlimited";
+  contextSources: string[];
   theme: string;
-  location: "icloud" | "local";
-  localPath: string;
-  icloudPath: string;
+  worldPath: string;
   homePath: string;
 }
 
@@ -57,31 +57,31 @@ export default function App() {
   const [step, setStep] = useState<Step>("welcome");
   const [state, setState] = useState<InstallState>({
     name: "",
-    mode: "builder",
+    roles: [],
     projects: [],
+    focusProject: "",
+    focusTask: "",
     people: [],
+    lifeAreas: [],
     lifeGoals: "",
-    tools: [],
-    claudePlan: "daily",
+    contextSources: [],
     theme: "light",
-    location: "local",
-    localPath: "",
-    icloudPath: "",
+    worldPath: "",
     homePath: "",
   });
 
   const allSteps: Step[] = [
     "welcome",
+    "whatsaworld",
     "identity",
-    "whatyoudo",
-    "projects",
+    "yourwork",
+    "whatsup",
     "people",
     "life",
-    "claudeplan",
-    "theme",
-    "location",
-    "installing",
-    "complete",
+    "sources",
+    "preferences",
+    "building",
+    "handoff",
   ];
   const stepIndex = allSteps.indexOf(step);
 
@@ -116,36 +116,45 @@ export default function App() {
             onNext={async () => {
               try {
                 const home = await invoke<string>("get_home_dir");
-                const icloud = await invoke<string>("get_icloud_path").catch(() => "");
-                setState((s) => ({ ...s, homePath: home, icloudPath: icloud }));
+                setState((s) => ({ ...s, homePath: home }));
               } catch {}
-              setStep("identity");
+              setStep("whatsaworld");
             }}
+          />
+        )}
+        {step === "whatsaworld" && (
+          <WhatsAWorld
+            onNext={() => setStep("identity")}
+            onBack={() => setStep("welcome")}
           />
         )}
         {step === "identity" && (
           <Identity
             name={state.name}
+            roles={state.roles}
             onNameChange={(name) => setState((s) => ({ ...s, name }))}
-            onNext={() => setStep("whatyoudo")}
-            onBack={() => setStep("welcome")}
+            onRolesChange={(roles) => setState((s) => ({ ...s, roles }))}
+            onNext={() => setStep("yourwork")}
+            onBack={() => setStep("whatsaworld")}
           />
         )}
-        {step === "whatyoudo" && (
-          <WhatYouDo
-            mode={state.mode}
-            onChange={(mode) => setState((s) => ({ ...s, mode }))}
-            onNext={() => setStep("projects")}
+        {step === "yourwork" && (
+          <YourWork
+            roles={state.roles}
+            projects={state.projects}
+            onChange={(projects) => setState((s) => ({ ...s, projects }))}
+            onNext={() => setStep("whatsup")}
             onBack={() => setStep("identity")}
           />
         )}
-        {step === "projects" && (
-          <Projects
-            mode={state.mode}
+        {step === "whatsup" && (
+          <WhatsUp
             projects={state.projects}
-            onChange={(projects) => setState((s) => ({ ...s, projects }))}
+            focusProject={state.focusProject}
+            focusTask={state.focusTask}
+            onChange={(updates) => setState((s) => ({ ...s, ...updates }))}
             onNext={() => setStep("people")}
-            onBack={() => setStep("whatyoudo")}
+            onBack={() => setStep("yourwork")}
           />
         )}
         {step === "people" && (
@@ -153,46 +162,45 @@ export default function App() {
             people={state.people}
             onChange={(people) => setState((s) => ({ ...s, people }))}
             onNext={() => setStep("life")}
-            onBack={() => setStep("projects")}
+            onBack={() => setStep("whatsup")}
           />
         )}
         {step === "life" && (
           <Life
+            lifeAreas={state.lifeAreas}
             lifeGoals={state.lifeGoals}
-            tools={state.tools}
             onChange={(updates) => setState((s) => ({ ...s, ...updates }))}
-            onNext={() => setStep("claudeplan")}
+            onNext={() => setStep("sources")}
             onBack={() => setStep("people")}
           />
         )}
-        {step === "claudeplan" && (
-          <ClaudePlan
-            plan={state.claudePlan}
-            onChange={(claudePlan) => setState((s) => ({ ...s, claudePlan }))}
-            onNext={() => setStep("theme")}
+        {step === "sources" && (
+          <Sources
+            contextSources={state.contextSources}
+            onChange={(contextSources) =>
+              setState((s) => ({ ...s, contextSources }))
+            }
+            onNext={() => setStep("preferences")}
             onBack={() => setStep("life")}
           />
         )}
-        {step === "theme" && (
-          <Theme
+        {step === "preferences" && (
+          <Preferences
             theme={state.theme}
-            onChange={(theme) => setState((s) => ({ ...s, theme }))}
-            onNext={() => setStep("location")}
-            onBack={() => setStep("claudeplan")}
+            worldPath={state.worldPath}
+            homePath={state.homePath}
+            onThemeChange={(theme) => setState((s) => ({ ...s, theme }))}
+            onWorldPathChange={(worldPath) =>
+              setState((s) => ({ ...s, worldPath }))
+            }
+            onNext={() => setStep("building")}
+            onBack={() => setStep("sources")}
           />
         )}
-        {step === "location" && (
-          <Location
-            state={state}
-            onChange={(updates) => setState((s) => ({ ...s, ...updates }))}
-            onNext={() => setStep("installing")}
-            onBack={() => setStep("life")}
-          />
+        {step === "building" && (
+          <Building state={state} onComplete={() => setStep("handoff")} />
         )}
-        {step === "installing" && (
-          <Installing state={state} onComplete={() => setStep("complete")} />
-        )}
-        {step === "complete" && <Complete name={state.name} />}
+        {step === "handoff" && <Handoff name={state.name} />}
       </div>
     </div>
   );

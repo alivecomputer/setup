@@ -26,6 +26,7 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-y: auto;
   user-select: none;
+  min-width: 400px;
 }
 
 .app {
@@ -137,6 +138,20 @@ body {
   color: var(--text-muted);
 }
 
+select.input-field {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238a8078' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+textarea.input-field {
+  font-family: var(--font);
+  line-height: 1.5;
+}
+
 .location-option {
   display: flex;
   align-items: center;
@@ -168,6 +183,7 @@ body {
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
+  flex-shrink: 0;
 }
 
 .location-option.selected .location-dot {
@@ -239,6 +255,7 @@ body {
   border-color: var(--text-muted);
 }
 
+/* Install / Building log */
 .install-log {
   flex: 1;
   background: var(--text);
@@ -246,6 +263,7 @@ body {
   padding: 16px;
   overflow-y: auto;
   margin-bottom: 20px;
+  min-height: 200px;
 }
 
 .log-line {
@@ -300,39 +318,7 @@ body {
   font-style: italic;
 }
 
-.check-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 0;
-  font-size: 14px;
-  border-bottom: 1px solid var(--border);
-}
-
-.check-item:last-child {
-  border-bottom: none;
-}
-
-.check-icon {
-  width: 20px;
-  text-align: center;
-  font-size: 14px;
-}
-
-.spinner {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 2px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
+/* Completion screen */
 .complete-screen {
   display: flex;
   flex-direction: column;
@@ -360,7 +346,43 @@ body {
   max-width: 320px;
 }
 
-/* Tags (experiments, tools) */
+/* Check items (install progress) */
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.check-item:last-child {
+  border-bottom: none;
+}
+
+.check-icon {
+  width: 20px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Tags / tool chips */
 .tag {
   display: inline-block;
   padding: 4px 10px;
@@ -374,6 +396,35 @@ body {
 
 .tag:hover {
   background: rgba(184, 115, 51, 0.15);
+}
+
+/* Tool grid (sources, etc) */
+.tool-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tool-option {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-family: var(--font);
+  font-size: 13px;
+  background: var(--bg-card);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tool-option:hover {
+  border-color: var(--accent-light);
+}
+
+.tool-option.selected {
+  border-color: var(--accent);
+  background: rgba(184, 115, 51, 0.06);
+  color: var(--accent);
 }
 
 /* People rows */
@@ -411,37 +462,294 @@ body {
   color: var(--error);
 }
 
-/* Tool grid */
-.tool-grid {
+
+/* ── WhatsAWorld panels ────────────────── */
+
+.world-panels {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.world-panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  background: var(--bg-card);
+}
+
+.world-panel-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(184, 115, 51, 0.1);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  margin-bottom: 10px;
+}
+
+.world-panel-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.world-panel-text {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.alive-domains {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
   gap: 6px;
 }
 
-.tool-option {
-  padding: 6px 14px;
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  font-family: var(--font);
+.alive-domain {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+.alive-letter {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: rgba(184, 115, 51, 0.1);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 13px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+
+.alive-word {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  min-width: 90px;
+}
+
+.alive-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+
+/* ── Role chips (Identity) ────────────── */
+
+.role-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.role-chip {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  font-family: var(--font);
+  font-size: 14px;
   background: var(--bg-card);
   color: var(--text-muted);
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.tool-option:hover {
+.role-chip:hover {
   border-color: var(--accent-light);
+  color: var(--text);
 }
 
-.tool-option.selected {
+.role-chip.selected {
   border-color: var(--accent);
-  background: rgba(184, 115, 51, 0.06);
+  background: rgba(184, 115, 51, 0.08);
+  color: var(--accent);
+  font-weight: 500;
+}
+
+
+/* ── Type education (YourWork) ─────────── */
+
+.type-education {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.type-edu-hint {
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.5;
+  border-bottom: 1px solid var(--border);
+  background: rgba(184, 115, 51, 0.03);
+}
+
+.type-edu-hint strong {
   color: var(--accent);
 }
 
-/* Textarea */
-textarea.input-field {
-  font-family: var(--font);
-  line-height: 1.5;
+.type-edu-row {
+  padding: 12px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.type-edu-row + .type-edu-row {
+  border-top: 1px solid var(--border);
+}
+
+.type-edu-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.type-edu-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+
+/* ── Life areas ────────────────────────── */
+
+.life-areas {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.life-area-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--bg-card);
+}
+
+.life-area-option:hover {
+  border-color: var(--accent-light);
+}
+
+.life-area-option.selected {
+  border-color: var(--accent);
+  background: rgba(184, 115, 51, 0.04);
+}
+
+.life-area-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  color: white;
+  font-size: 11px;
+}
+
+.life-area-option.selected .life-area-check {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.life-area-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.life-area-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+
+/* ── Source groups ──────────────────────── */
+
+.source-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 12px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.source-group {
+  /* no extra container styling — just structure */
+}
+
+.source-group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+
+.source-group-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.source-group-count {
+  font-size: 10px;
+  background: rgba(184, 115, 51, 0.12);
+  color: var(--accent);
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.source-group-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.source-group-tools .tool-option {
+  font-size: 12px;
+  padding: 4px 12px;
+}
+
+
+/* ── Focus options (WhatsUp) ───────────── */
+
+.focus-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
