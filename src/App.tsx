@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import walnutIcon from "./assets/walnut-icon.svg";
 import Welcome from "./steps/Welcome";
 import WhatsAWorld from "./steps/WhatsAWorld";
 import Identity from "./steps/Identity";
@@ -89,8 +90,7 @@ export default function App() {
     <div className="app">
       {step !== "welcome" && (
         <div className="header">
-          <div className="title">Walnut</div>
-          <div className="subtitle">Build Your World</div>
+          <img src={walnutIcon} alt="Walnut" style={{ width: 28, height: 28, marginBottom: 8 }} />
         </div>
       )}
 
