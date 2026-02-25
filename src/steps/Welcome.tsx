@@ -1,3 +1,6 @@
+import walnutIcon from "../assets/walnut-icon.svg";
+import walnutWordmark from "../assets/walnut-wordmark.svg";
+
 interface Props {
   onNext: () => void;
 }
@@ -5,13 +8,24 @@ interface Props {
 export default function Welcome({ onNext }: Props) {
   return (
     <>
-      <div className="step-title">Your alive computer starts here.</div>
-      <div className="step-description">
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <img
+          src={walnutIcon}
+          alt="Walnut"
+          style={{ width: 80, height: 80, marginBottom: 16 }}
+        />
+        <img
+          src={walnutWordmark}
+          alt="Walnut"
+          style={{ display: "block", margin: "0 auto", height: 28 }}
+        />
+      </div>
+
+      <div className="step-title" style={{ textAlign: "center" }}>
+        Build Your World
+      </div>
+      <div className="step-description" style={{ textAlign: "center" }}>
         Your context. Your files. Memory that compounds.
-        <br /><br />
-        Walnut creates a context system on your machine. Your decisions, your
-        people, your projects — in files you own forever. Every conversation
-        with AI compounds what came before.
         <br /><br />
         This takes about 3 minutes. After that, you have a World.
       </div>

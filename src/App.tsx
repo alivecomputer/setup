@@ -87,17 +87,12 @@ export default function App() {
 
   return (
     <div className="app">
-      <div className="header">
-        {step === "welcome" && (
-          <pre className="walnut-art">{`  .-"""-.
- /  .-.  \\
-|  /   \\  |
- \\  '-'  /
-  '-...-'`}</pre>
-        )}
-        <div className="title">Walnut</div>
-        <div className="subtitle">Build Your World</div>
-      </div>
+      {step !== "welcome" && (
+        <div className="header">
+          <div className="title">Walnut</div>
+          <div className="subtitle">Build Your World</div>
+        </div>
+      )}
 
       <div className="progress-bar">
         {allSteps.map((_, i) => (
